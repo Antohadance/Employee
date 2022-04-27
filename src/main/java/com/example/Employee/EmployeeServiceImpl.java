@@ -1,5 +1,6 @@
 package com.example.Employee;
-
+import org.springframework.stereotype.Component;
+@Component
 public class EmployeeServiceImpl implements EmployeeService {
     private final Employee[] employees;
     private int size;
