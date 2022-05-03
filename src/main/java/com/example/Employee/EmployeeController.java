@@ -33,7 +33,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/all")
-    public Collection<Employee> findAll(){return List.of(employeeService.findAll()); }
+    public Employee[] findAll(){
+        return employeeService.findAll();
+    }
 
     private String generateMassage(Employee employee,String status){
         return String.format("Сотрудник %s %s %s.",

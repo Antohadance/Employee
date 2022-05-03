@@ -1,5 +1,7 @@
 package com.example.Employee;
 
+import java.util.Collection;
+
 public interface EmployeeService {
     Employee add(String firstName, String lastName);
 
@@ -11,5 +13,5 @@ public interface EmployeeService {
 
     Employee find(String firstName, String lastName);
 
-    Employee[] findAll();
+    Collection<Employee> findAll();
 }

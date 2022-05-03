@@ -1,12 +1,17 @@
 package com.example.Employee;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 @Component
 public class EmployeeServiceImpl implements EmployeeService {
-    private final Employee[] employees;
-    private int size;
+    private final Set<Employee> employees;
 
     public EmployeeServiceImpl() {
-        employees = new Employee[10];
+        employees = new HashSet<>();
     }
 
     @Override
@@ -17,17 +22,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee add(Employee employee) {
-        if (size == employees.length) {
-            throw new EmployeeBookOverflowException();
-        }
-
-        int index = indexOf(employee);
-
-        if (index != -1) {
+        if (employees.contains(employee)) {
             throw new EmployeeExistsException();
         }
 
-        employees[size++] = employee;
+        employees.add(employee);
         return employee;
     }
 
@@ -39,38 +38,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee remove(Employee employee) {
-        int index = indexOf(employee);
-
-        if (index != -1) {
-            Employee result = employees[index];
-            System.arraycopy(employee, index + 1, employee, index, size - index);
-            size--;
-            return result;
+        if (!employees.contains(employee)) {
+            throw new EmployeeNotFoundExemption();
         }
 
-        throw new EmployeeNotFoundExemption();
+        employees.remove(employee);
+        return employee;
     }
 
     @Override
     public Employee find(String firstName, String lastName) {
         Employee newEmployee = new Employee(firstName, lastName);
-        int index = indexOf(newEmployee);
-
-        if (index != -1) {
-            return employees[index];
+        if (!employees.contains(newEmployee)) {
+            throw new EmployeeNotFoundExemption();
         }
-        throw new EmployeeNotFoundExemption();
+        return newEmployee;
     }
 
     @Override
-    public Employee[] findAll() {return employees;}
-
-    private int indexOf(Employee employee){
-        for (int i = 0; i < size; i++) {
-            if(employees[i].equals(employee)){
-                return i;
-            }
-        }
-        return -1;
-    }
+    public Collection<Employee> findAll() {return Collections.unmodifiableSet(employees);}
 }
